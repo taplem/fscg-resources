@@ -95,6 +95,15 @@ For example:
 $ luajit solve.lua pk1thf72P
 ```
 
+Note: glibc malloc performs badly for parallel workloads.
+If you are using Gurobi with one of the parallel initialization strategies (`P` or `D`), it's recommended to use a malloc implementation designed for parallel workloads such as [tcmalloc](https://github.com/google/tcmalloc) or [jemalloc](https://github.com/jemalloc/jemalloc).
+This does not affect HiGHS, since it does not make many malloc calls.
+It also does not affect the `g` and `p` modes, since they do not call the LP solver concurrently.
+Example usage, assuming you installed `tcmalloc` in `/usr/lib/libtcmalloc.so`:
+```
+LD_PRELOAD=/usr/lib/libtcmalloc.so luajit solve pk{M}{sy|rc}f{F}{mode}
+```
+
 ## Generating MPS files
 
 Run:
